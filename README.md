@@ -1,63 +1,258 @@
- # Repair Before Replace AI
- 
- Full-stack React, Express, MongoDB and JWT application for diagnosing items and choosing repair before replacement.
- 
- ## Run locally
- 
- 1. Install dependencies:
- 
- ```bash
- npm install
- ```
- 
- 2. Copy `.env.example` to `.env` and set `MONGODB_URI`, a long `JWT_SECRET`, and the Cloudinary credentials used for image uploads.
- 
- 3. Start the API and frontend together:
- 
- ```bash
- npm run dev:full
- ```
- 
- Frontend: `http://localhost:5173`  
- API: `http://localhost:5000`
- 
- You can also run them separately with `npm run server:dev` and `npm run dev`.
- 
- ## API
- 
- - `POST /api/auth/register`
- - `POST /api/auth/login`
- - `POST /api/auth/logout`
- - `GET /api/auth/me`
- - `GET/PATCH /api/profile`
- - `GET /api/dashboard`
- - `POST/GET /api/diagnoses`
- - `GET /api/diagnoses/:id`
- - `PATCH /api/diagnoses/:id/status`
- - `POST /api/diagnoses/:id/feedback`
- - `GET/POST /api/maintenance`
- - `PATCH/DELETE /api/maintenance/:id`
- 
- The AI service is currently a deterministic backend service that returns structured diagnosis data. Replace `generateDiagnosis` in `server/services.js` with a provider call when an AI key is available.
- 
- ## Validation
- 
- ```bash
- npm run lint
- npm run build
- ```
+# Repair Before Replace AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+An AI-powered repair diagnosis and cost comparison platform that helps users make smarter decisions about repairing or replacing broken household and electronic items.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Repair Before Replace AI allows users to upload an image of a broken item, describe the problem, and receive an AI-generated diagnosis with estimated repair costs, replacement costs, safety warnings, and repair guidance.
 
-## React Compiler
+The platform is designed to help users understand their repair options before spending money on a replacement.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the Oxlint configuration
+### AI Diagnosis
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+* Upload images of broken items.
+* Select item categories.
+* Describe symptoms and problems.
+* Get AI-generated possible causes.
+* Receive repairability and difficulty estimates.
+
+### Repair vs Replace
+
+* Compare estimated repair and replacement costs.
+* View potential savings.
+* Receive a repair, replace, or professional inspection recommendation.
+* See required tools and estimated repair time.
+
+### User Dashboard
+
+* View total diagnoses.
+* Track repaired and replaced items.
+* Monitor estimated money saved.
+* Access recent diagnosis history.
+
+### Repair History
+
+* Save and review previous diagnoses.
+* View detailed repair recommendations.
+* Update repair and replacement status.
+* Submit feedback about repair results.
+
+### Maintenance Reminders
+
+* Create maintenance tasks.
+* Track upcoming and overdue reminders.
+* Mark maintenance tasks as completed.
+
+### Authentication & Security
+
+* User registration and login.
+* JWT-based authentication.
+* Password hashing with bcrypt.
+* Protected routes.
+* Input validation and error handling.
+* Security middleware and rate limiting.
+
+## Tech Stack
+
+### Frontend
+
+* React.js
+* Vite
+* JavaScript
+* Tailwind CSS
+* React Router DOM
+* Axios
+* Lucide React
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT
+* bcryptjs
+* Multer
+* Cloudinary
+
+### AI
+
+* Backend-owned AI service abstraction.
+* Image and text-based diagnosis support.
+* Structured diagnosis and repair recommendations.
+* Configurable AI provider through environment variables.
+
+## Project Structure
+
+```text
+repair-before-replace-ai/
+├── client/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── server/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── services/
+│   ├── controllers/
+│   └── package.json
+│
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md
+```
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/repair-before-replace-ai.git
+cd repair-before-replace-ai
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+If frontend and backend have separate package.json files:
+
+```bash
+cd client
+npm install
+
+cd ../server
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create `.env` files according to the `.env.example` files.
+
+Required configuration:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+CLIENT_URL=http://localhost:5173
+```
+
+Never commit real credentials or API keys to GitHub.
+
+### 4. Start the Application
+
+From the project root:
+
+```bash
+npm run dev:full
+```
+
+Or start frontend and backend separately:
+
+```bash
+cd client
+npm run dev
+```
+
+```bash
+cd server
+npm run dev
+```
+
+## Application Flow
+
+```text
+Landing Page
+    ↓
+Register / Login
+    ↓
+Dashboard
+    ↓
+Diagnose an Item
+    ↓
+Upload Image & Describe Problem
+    ↓
+AI Analysis
+    ↓
+Repair vs Replace Result
+    ↓
+Save Diagnosis
+    ↓
+Repair History
+    ↓
+Maintenance Tracking
+```
+
+## API Endpoints
+
+### Authentication
+
+```text
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+GET  /api/auth/me
+```
+
+### Diagnoses
+
+```text
+POST   /api/diagnoses
+GET    /api/diagnoses
+GET    /api/diagnoses/:id
+PUT    /api/diagnoses/:id
+DELETE /api/diagnoses/:id
+```
+
+### AI
+
+```text
+POST /api/ai/analyze
+POST /api/ai/questions
+```
+
+### Maintenance
+
+```text
+POST   /api/maintenance
+GET    /api/maintenance
+PUT    /api/maintenance/:id
+DELETE /api/maintenance/:id
+```
+
+### Dashboard
+
+```text
+GET /api/dashboard/stats
+```
+
+## Safety Disclaimer
+
+AI-generated diagnoses are estimates and should not be considered professional repair inspections.
+
+For electrical, gas, high-voltage, battery, or other hazardous repairs, consult a qualified professional.
+
+Repair and replacement costs are estimates and may vary based on location, item condition, and service provider.
+
+## Future Improvements
+
+* Real-time repair expert consultations.
+* Local repair service discovery.
+* More accurate regional cost estimation.
+* AI-generated visual repair guides.
+* Mobile application.
+* Community repair knowledge base.
+* Sustainability and waste reduction analytics.
